@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
@@ -6,10 +7,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
 public class HorseTest {
     //Проверить, что при передаче в конструктор первым параметром null, будет выброшено IllegalArgumentException. Для этого нужно воспользоваться методом assertThrows;
     @Test
@@ -64,13 +67,14 @@ public class HorseTest {
         assertEquals(testName, horse.getName());
 
     }
+
     //метод getSpeed
     //Проверить, что метод возвращает число, которое было передано вторым параметром в конструктор;
     @Test
     public void testGetSpeed() {
         double testSpeed = 33.5;
-        Horse horse = new Horse("Конь", testSpeed,100);
-        assertEquals(testSpeed,horse.getSpeed());
+        Horse horse = new Horse("Конь", testSpeed, 100);
+        assertEquals(testSpeed, horse.getSpeed());
     }
 
     //метод getDistance
@@ -79,54 +83,26 @@ public class HorseTest {
     @Test
     public void testGetDistance() {
         double testDistance = 777;
-        Horse horse = new Horse("Конь", 32,testDistance);
-        assertEquals(testDistance,horse.getDistance());
+        Horse horse = new Horse("Конь", 32, testDistance);
+        assertEquals(testDistance, horse.getDistance());
     }
+
     @Test
     public void testGetDistanceZiro() {
         Horse horse = new Horse("Конь", 24);
-        assertEquals(0,horse.getDistance());
+        assertEquals(0, horse.getDistance());
     }
     //метод move
     //Проверить, что метод вызывает внутри метод getRandomDouble с параметрами 0.2 и 0.9. Для этого нужно использовать MockedStatic и его метод verify;
     //Проверить, что метод присваивает дистанции значение высчитанное по формуле: distance + speed * getRandomDouble(0.2, 0.9). Для этого нужно замокать getRandomDouble, чтобы он возвращал определенные значения, которые нужно задать параметризовав тест.
+
+
     @Test
-    public void testMove() {
-        try (MockedStatic<Horse> mocked = Mockito.mockStatic(Horse.class)) {
-            mocked.when(() -> Horse.move())
-                    .thenReturn(100);
-
-
+    public void test8() {
+        Horse horse = Mockito.mock(Horse.class);
+        horse.move();
+        Mockito.verify(horse).getRandomDouble(0.2,0.9);
     }
-    @Test
-    void whenProcessPaymentCalled_thenStaticMethodInvoked() {
-        // 1. Создаем мок статического класса
-        try (MockedStatic<PaymentProcessor> mocked = Mockito.mockStatic(PaymentProcessor.class)) {
 
-            // 2. Настраиваем мок
-            mocked.when(() -> PaymentProcessor.processPayment(anyString(), anyDouble()))
-                    .thenReturn(true);
 
-            // 3. Вызываем тестируемый код
-            boolean result = PaymentProcessor.processPayment("order-123", 100.0);
-
-            // 4. Проверяем результат
-            assertTrue(result);
-
-            // 5. Проверяем вызов статического метода
-            mocked.verify(() -> PaymentProcessor.processPayment(
-                    eq("order-123"),
-                    eq(100.0)
-            ));
-
-            // Можно проверить количество вызовов
-            mocked.verify(
-                    () -> PaymentProcessor.processPayment(anyString(), anyDouble()),
-                    times(1)
-            );
-        }
-
-        // После закрытия блока try статический мок сбрасывается
-    }
-}
 }
