@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 public class HorseTest {
@@ -98,11 +99,17 @@ public class HorseTest {
 
 
     @Test
-    public void test8() {
-        Horse horse = Mockito.mock(Horse.class);
-        horse.move();
-        Mockito.verify(horse).getRandomDouble(0.2,0.9);
+    void givenStaticMethodWithNoArgs() {
+        Horse horse = new Horse("Конь-огонь", 3, 5);
+        double initialDistance = horse.getDistance();
+        try (MockedStatic<Horse> mockedHors = Mockito.mockStatic(Horse.class)) {
+            mockedHors.when(() -> Horse.getRandomDouble(0.2,0.9)).thenReturn(0.5);
+            horse.move();
+            mockedHors.verify(() -> Horse.getRandomDouble(0.2,0.9));
+            assertEquals(initialDistance+horse.getSpeed()*Horse.getRandomDouble(0.2,0.9),horse.getDistance());
+        }
     }
+
 
 
 }
