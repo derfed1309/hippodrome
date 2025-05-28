@@ -14,18 +14,18 @@ public class Hippodrome {
 
     public Hippodrome(List<Horse> horses) {
         if (isNull(horses)) {
-            logger.error("Hippodrome: Horses list is null");
+            logger.error("Horses list is null");
 
             throw new IllegalArgumentException("Horses cannot be null.");
         } else if (horses.isEmpty()) {
             //b. Если в конструктор был передан пустой список, то перед пробросом исключения, добавить в лог запись вида: 2022-05-31 17:30:41,074 ERROR Hippodrome: Horses list is empty
-            logger.error("Hippodrome: Horses list is empty");
+            logger.error("Horses list is empty");
             throw new IllegalArgumentException("Horses cannot be empty.");
         }
 
         this.horses = horses;
         //В конце конструктора добавить в лог запись вида: 2022-05-31 17:05:26,152 DEBUG Hippodrome: Создание Hippodrome, лошадей [7]
-        logger.debug("Создание Hippodrome, лошадей [{}]",horses.size());
+        logger.debug("Создание Hippodrome, лошадей {}",horses.size());
     }
 
     public List<Horse> getHorses() {
