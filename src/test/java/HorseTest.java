@@ -17,10 +17,9 @@ import static org.mockito.Mockito.mockStatic;
 public class HorseTest {
     @Test
     public void whenNameIsNull_ThenThrowsIllegalArgumentException() {
-        String str = new String();
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Horse(str, 1)
+                () -> new Horse(null, 1)
         );
         assertEquals("Name cannot be null.", exception.getMessage());
     }
