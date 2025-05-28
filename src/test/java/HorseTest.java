@@ -15,7 +15,6 @@ import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 public class HorseTest {
-    //Проверить, что при передаче в конструктор первым параметром null, будет выброшено IllegalArgumentException. Для этого нужно воспользоваться методом assertThrows;
     @Test
     public void whenNameIsNull_ThenThrowsIllegalArgumentException() {
         String str = new String();
@@ -25,12 +24,10 @@ public class HorseTest {
         );
         assertEquals("Name cannot be null.", exception.getMessage());
     }
-    //Проверить, что при передаче в конструктор первым параметром null, выброшенное исключение будет содержать сообщение "Name cannot be null.". Для этого нужно получить сообщение из перехваченного исключения и воспользоваться методом assertEquals;
-
 
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "\t", "\n", "\r", " \t\n\r"})
-    public void test1(String strings) {
+    public void whenNameIsBlank_ThenIllegalArgumentException(String strings) {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new Horse(strings, 1, 2)
@@ -38,10 +35,8 @@ public class HorseTest {
         assertEquals("Name cannot be blank.", exception.getMessage());
     }
 
-    // Проверить, что при передаче в конструктор вторым параметром отрицательного числа, будет выброшено IllegalArgumentException;
-    //  Проверить, что при передаче в конструктор вторым параметром отрицательного числа, выброшенное исключение будет содержать сообщение "Speed cannot be negative.";
     @Test
-    public void test4() {
+    public void whenSpeedIsNegative_ThenIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new Horse("Мурка", -1, 2)
@@ -50,29 +45,24 @@ public class HorseTest {
     }
 
     @Test
-    public void test5() {
+    public void whenDistanceIsNegative_ThenIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new Horse("Васька", 1, -2)
         );
         assertEquals("Distance cannot be negative.", exception.getMessage());
     }
-    //Проверить, что при передаче в конструктор третьим параметром отрицательного числа, будет выброшено IllegalArgumentException;
-    //Проверить, что при передаче в конструктор третьим параметром отрицательного числа, выброшенное исключение будет содержать сообщение "Distance cannot be negative."
 
-    //Проверить, что метод возвращает строку, которая была передана первым параметром в конструктор;
     @Test
-    public void testGetName() {
+    public void getNameReturnsValidName() {
         String testName = "TestName";
         Horse horse = new Horse(testName, 300, 150);
         assertEquals(testName, horse.getName());
 
     }
 
-    //метод getSpeed
-    //Проверить, что метод возвращает число, которое было передано вторым параметром в конструктор;
     @Test
-    public void testGetSpeed() {
+    public void getSpeedReturnsValidSpeed() {
         double testSpeed = 33.5;
         Horse horse = new Horse("Конь", testSpeed, 100);
         assertEquals(testSpeed, horse.getSpeed());
@@ -82,34 +72,29 @@ public class HorseTest {
     //Проверить, что метод возвращает число, которое было передано третьим параметром в конструктор;
     //Проверить, что метод возвращает ноль, если объект был создан с помощью конструктора с двумя параметрами;
     @Test
-    public void testGetDistance() {
+    public void getDistanceReturnValidDistance() {
         double testDistance = 777;
         Horse horse = new Horse("Конь", 32, testDistance);
         assertEquals(testDistance, horse.getDistance());
     }
 
     @Test
-    public void testGetDistanceZiro() {
+    public void whenDistanceZiro_ThenGetDistanceReturnZiro() {
         Horse horse = new Horse("Конь", 24);
         assertEquals(0, horse.getDistance());
     }
-    //метод move
-    //Проверить, что метод вызывает внутри метод getRandomDouble с параметрами 0.2 и 0.9. Для этого нужно использовать MockedStatic и его метод verify;
-    //Проверить, что метод присваивает дистанции значение высчитанное по формуле: distance + speed * getRandomDouble(0.2, 0.9). Для этого нужно замокать getRandomDouble, чтобы он возвращал определенные значения, которые нужно задать параметризовав тест.
-
 
     @Test
-    void givenStaticMethodWithNoArgs() {
+    void moveTest() {
         Horse horse = new Horse("Конь-огонь", 3, 5);
         double initialDistance = horse.getDistance();
         try (MockedStatic<Horse> mockedHors = Mockito.mockStatic(Horse.class)) {
-            mockedHors.when(() -> Horse.getRandomDouble(0.2,0.9)).thenReturn(0.5);
+            mockedHors.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(0.5);
             horse.move();
-            mockedHors.verify(() -> Horse.getRandomDouble(0.2,0.9));
-            assertEquals(initialDistance+horse.getSpeed()*Horse.getRandomDouble(0.2,0.9),horse.getDistance());
+            mockedHors.verify(() -> Horse.getRandomDouble(0.2, 0.9));
+            assertEquals(initialDistance + horse.getSpeed() * Horse.getRandomDouble(0.2, 0.9), horse.getDistance());
         }
     }
-
 
 
 }
